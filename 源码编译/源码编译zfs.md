@@ -73,7 +73,7 @@ bash autogen.sh
 ```
 
 &nbsp;
-## 编译server
+## 构建server rpms
 ### 配置server
 ```bash
 ./configure --enable-server --disable-ldiskfs
@@ -85,7 +85,7 @@ make rpms
 ```
 
 &nbsp;
-## 编译client
+## 构建client rpms
 ### 清除编译配置
 ```bash
 make distclean
