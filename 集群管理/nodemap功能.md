@@ -1,3 +1,6 @@
+> lustre版本：2.15.3  
+
+&nbsp;
 # 简介
 nodemap功能支持不同主机上的用户UID和GID映射到MGS服务所在的主机系统上，也就是将所有客户端中所有的用户全部映射到lustre系统中。当不同主机之间存在多个相同UID和GID的用户时，通过映射，可以保证每个用户只能访问自己的文件。
 
@@ -11,7 +14,7 @@ nodemap功能相关的设置只能在MGS服务所在的节点上操作。nodemap
 &nbsp;
 &nbsp;
 # 部署
-为了所有的操作都能正常执行，lustre文件系统要求提供一个特殊的nodemap，该nodemap必须覆盖所有的服务节点，同时该节点必须要开启admin和trusted属性。
+为了所有的操作都能正常执行，lustre文件系统要求提供一个特殊的nodemap，该nodemap必须覆盖所有的服务节点，同时该nodemap必须要开启admin和trusted属性。
 
 ## 服务端
 ### 添加nodemap
