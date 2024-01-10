@@ -13,7 +13,7 @@ nodemap功能相关的设置只能在MGS服务所在的节点上操作。nodemap
 
 &nbsp;
 &nbsp;
-# 部署
+# 实战
 为了所有的操作都能正常执行，lustre文件系统要求提供一个特殊的nodemap，该nodemap必须覆盖所有的服务节点，同时该nodemap必须要开启admin和trusted属性。
 
 ## 服务端
