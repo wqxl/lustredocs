@@ -44,7 +44,7 @@ cd depends
 rpm --reinstall --replacefiles -iUvh *.rpm
 
 cd zfs
-rpm --reinstall --replacefiles -iUvh kmod-zfs-2.0.5-1.el8.x86_64.rpm libzfs4-2.0.5-1.el8.x86_64.rpm zfs-2.0.5-1.el8.x86_64.rpm
+rpm --reinstall --replacefiles -iUvh kmod-zfs-2.0.5-1.el8.x86_64.rpm libzfs4-2.0.5-1.el8.x86_64.rpm libzpool4-2.0.5-1.el8.x86_64.rpm zfs-2.0.5-1.el8.x86_64.rpm
 
 cd lustre/server
 rpm --reinstall --replacefiles -iUvh kmod-lustre-2.15.3-1.el8.x86_64.rpm kmod-lustre-osd-zfs-2.15.3-1.el8.x86_64.rpm lustre-2.15.3-1.el8.x86_64.rpm lustre-osd-zfs-mount-2.15.3-1.el8.x86_64.rpm lustre-resource-agents-2.15.3-1.el8.x86_64.rpm lustre-iokit-2.15.3-1.el8.x86_64.rpm
