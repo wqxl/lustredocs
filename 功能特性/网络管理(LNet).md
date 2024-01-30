@@ -3,7 +3,7 @@ LNet(Lustre networking feature)是lustre集群之间网络通信机制。它支�
 
 Lustre network stack由两部分组成：LNet module和LND(Lustre network driver)。通常情况下客户端和服务端必须在同一网段内，如果不在同一网段内，需要配置路由。
 
-在LNet中，每个节点至少有1个NID(network identifier)。NID由网卡IP和LNet label组成，比如192.168.1.2@tcp0。LNet label通常由网络通信类型和序号组成，比如tcp0。通常情况下序号和网卡的数量一致。
+在LNet中，每个节点至少有1个NID(network identifier)。NID由网卡IP和LNet label组成，比如192.168.1.2@tcp0。LNet label通常由网络通信类型和序号组成，比如tcp0。通常情况下序号表示子网的编号。
 
 &nbsp;
 &nbsp;
