@@ -3,15 +3,14 @@
 
 &nbsp;
 # 安装软件
-### 启动必要的软件仓库
-```bash
-yum config-manager --enable appstream baseos extras powertools ha
-```
-
 ### 软件安装
 ```bash
-yum install pacemaker pcs psmisc
+tar -xzvf pacemaker-2.0.5-9-rpms-i.tar.gz
+yum install ./pacemaker-2.0.5-9-rpms-i/*.rpm
 ```
+也可以使用`rpm --reinstall --replacefiles -iUvh ./pacemaker-2.0.5-9-rpms-i/*.rpm`命令安装。  
+如果将pacemaker-2.0.5-9-rpms-i目录做成离线yum源，也可以执行`yum install pacemaker pcs psmisc fence-agents-ipmilan`安装。  
+也可以直接联网安装，先执行`yum config-manager --enable appstream baseos extras powertools ha`开启必要的软件仓库，然后再执行`yum install pacemaker pcs psmisc fence-agents-ipmilan`安装。
 
 ### 启动pcsd服务
 ```bash
