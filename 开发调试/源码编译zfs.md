@@ -27,9 +27,15 @@ yum makecache
 ## zfs编译
 lustre 2.15.3发布日志中建议zfs版本为2.1.11或者更高版本，因此需要自己编译zfs。openzfs提供了关于zfs详细文档，详细内容参考[https://openzfs.github.io/openzfs-docs](https://openzfs.github.io/openzfs-docs)。
 
+### 安装内核相关依赖
+```bash
+yum install kernel-abi-stablelists-4.18.0-305.3.1.el8 kernel-devel-4.18.0-305.3.1.el8 kernel-headers-4.18.0-305.3.1.el8 kernel-rpm-macros
+```
+注：kernel-devel和kernel-abi-stablelists必须要和内核版本一致
+
 ### 安装zfs编译依赖
 ```bash
-yum install gcc make autoconf automake libtool rpm-build libtirpc-devel libblkid-devel libuuid-devel libudev-devel openssl-devel zlib-devel libaio-devel libattr-devel elfutils-libelf-devel kernel-devel-$(uname -r) yum install python3 python3-devel python3-setuptools python3-cffi libffi-devel git ncompress libcurl-devel python3-packaging
+yum install autoconf automake elfutils-libelf-devel gcc git libaio-devel libattr-devel libblkid-devel libcurl-devel libffi-devel libtirpc-devel libtool libuuid-devel make ncompress openssl-devel python3-cffi python3-packaging python36 python36-devel rpm-build systemd-devel zlib-devel
 ```
 
 ### 获取源码
@@ -44,7 +50,7 @@ bash autogen.sh
 
 ### 配置
 ```bash
-./configure
+./configure --with-spec=redhat
 ```
 
 ### 构建 zfs rpms
@@ -56,25 +62,22 @@ make rpms -j4
 ## lustre编译
 lustre官方wiki提供了详细的编译指南，详细内容参考[https://wiki.lustre.org/Compiling_Lustre](https://wiki.lustre.org/Compiling_Lustre)。
 
-### 安装zfs
-```bash
-yum install sysstat
-
-cd zfs-2.1.11
-
-rpm --reinstall --replacefiles -iUvh zfs-2.1.11-1.el8.x86_64.rpm kmod-zfs-4.18.0-305.3.1.el8.x86_64-2.1.11-1.el8.x86_64.rpm kmod-zfs-devel-4.18.0-305.3.1.el8.x86_64-2.1.11-1.el8.x86_64.rpm kmod-zfs-devel-2.1.11-1.el8.x86_64.rpm libzfs5-2.1.11-1.el8.x86_64.rpm libzfs5-devel-2.1.11-1.el8.x86_64.rpm libnvpair3-2.1.11-1.el8.x86_64.rpm libuutil3-2.1.11-1.el8.x86_64.rpm libzpool5-2.1.11-1.el8.x86_64.rpm
-```
-
 ### 安装内核相关依赖
 ```bash
-yum install kernel-devel-4.18.0-305.3.1.el8 kernel-abi-stablelists-4.18.0-305.3.1.el8 kernel-rpm-macros
+yum install kernel-abi-stablelists-4.18.0-305.3.1.el8 kernel-devel-4.18.0-305.3.1.el8 kernel-headers-4.18.0-305.3.1.el8 kernel-rpm-macros
 ```
-注：kernel-devel和kernel-abi-stablelists必须要和内核版本一致
+kernel-devel和kernel-abi-stablelists必须要和内核版本一致
 
 ### 安装lustre编译依赖
 ```bash
-yum install bison device-mapper-devel elfutils-devel elfutils-libelf-devel expect flex gcc gcc-c++ git glib2 glib2-devel hmaccalc keyutils-libs-devel krb5-devel ksh libattr-devel libblkid-devel libselinux-devel libtool libuuid-devel libyaml-devel lsscsi make ncurses-devel net-snmp-devel net-tools newt-devel numactl-devel parted patchutils pciutils-devel perl-ExtUtils-Embed pesign redhat-rpm-config rpm-build systemd-devel tcl tcl-devel tk tk-devel wget xmlto yum-utils zlib-devel libmount-devel libnl3-devel python3-devel
+yum install bison device-mapper-devel elfutils-devel elfutils-libelf-devel expect flex gcc gcc-c++ git glib2-devel keyutils-libs-devel krb5-devel ksh libattr-devel libblkid-devel libmount-devel libnl3-devel libselinux-devel libtool libuuid-devel libyaml-devel make ncurses-devel net-snmp-devel newt-devel numactl-devel patchutils pciutils-devel perl-ExtUtils-Embed pesign python36-devel rpm-build systemd-devel tcl tcl-devel tk tk-devel xmlto yum-utils zlib-devel
 ```
+
+### 安装zfs
+```bash
+yum install kmod-zfs kmod-zfs-devel libzfs5 libzfs5-devel libzpool5 zfs
+```
+使用yum安装zfs时需要先做zfs离线yum源。
 
 ### 获取源码
 ```bash
@@ -97,6 +100,6 @@ bash autogen.sh
 
 ### 构建 lustre rpms
 ```bash
-make rpms
+make rpms -j4
 ```
 在执行`make rpms`之前一定要留意，如果前一次和后一次编译不同，比如前一次编译server，后一次编译client，一定要先执行`make distclean`，然后再执行`make rpms`。
