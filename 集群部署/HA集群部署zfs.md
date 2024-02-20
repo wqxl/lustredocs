@@ -13,10 +13,11 @@
 cp /opt/ZFS /usr/lib/ocf/resource.d/heartbeat/
 ```
 
-### 安装ipmi fence
+### 查看zfs agent是否已经安装
 ```bash
-yum install fence-agents-ipmilan
+pcs resource agents ocf:heartbeat
 ```
+如果输出中有ZFS，说明已经安装。或者执行`pcs resource list ocf:heartbeat:ZFS`也可以查看。
 
 &nbsp;
 # 创建resourse
