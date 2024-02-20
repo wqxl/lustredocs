@@ -38,17 +38,10 @@ getenforce
 ## 服务端
 ### 安装服务端软件
 ```bash
-tar -xzvf lustre-2.15.3-zfs-rpms.tar.gz
-
-cd depends
-rpm --reinstall --replacefiles -iUvh *.rpm
-
-cd zfs
-rpm --reinstall --replacefiles -iUvh kmod-zfs-2.0.5-1.el8.x86_64.rpm libzfs4-2.0.5-1.el8.x86_64.rpm libzpool4-2.0.5-1.el8.x86_64.rpm zfs-2.0.5-1.el8.x86_64.rpm
-
-cd lustre/server
-rpm --reinstall --replacefiles -iUvh kmod-lustre-2.15.3-1.el8.x86_64.rpm kmod-lustre-osd-zfs-2.15.3-1.el8.x86_64.rpm lustre-2.15.3-1.el8.x86_64.rpm lustre-osd-zfs-mount-2.15.3-1.el8.x86_64.rpm lustre-resource-agents-2.15.3-1.el8.x86_64.rpm lustre-iokit-2.15.3-1.el8.x86_64.rpm
+tar -xzvf lustre-2.15.3-zfs-rpms-i.tar.gz
+yum install ./lustre-2.15.3-zfs-rpms-i/server/*.rpm
 ```
+也可以使用`rpm --reinstall --replacefiles -iUvh ./lustre-2.15.3-zfs-rpms-i/server/*.rpm`命令安装。
 
 ### 加载zfs和lustre内核模块
 ```
@@ -146,14 +139,10 @@ mount -t lustre ostpool/ost-0 /lustre/ost/ost-0 -v
 ## 客户端
 ### 安装客户端软件
 ```bash
-tar -xzvf lustre-2.15.3-zfs-rpms.tar.gz
-
-cd depends
-rpm --reinstall --replacefiles -iUvh perl*.rpm
-
-cd lustre/client
-rpm --reinstall --replacefiles -iUvh kmod-lustre-client-2.15.3-1.el8.x86_64.rpm kmod-lustre-client-2.15.3-1.el8.x86_64.rpm
+tar -xzvf lustre-2.15.3-zfs-rpms-i.tar.gz
+yum install ./lustre-2.15.3-zfs-rpms-i/client/*.rpm
 ```
+也可以使用`rpm --reinstall --replacefiles -iUvh ./lustre-2.15.3-zfs-rpms-i/client/*.rpm`命令安装。
 
 ### 加载lustre内核模块
 ```bash
