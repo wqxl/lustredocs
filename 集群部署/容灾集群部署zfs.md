@@ -38,8 +38,10 @@ getenforce
 ## 服务端
 ### 安装服务端软件
 ```bash
-yum install lustre-osd-zfs-mount lustre lustre-resource-agents zfs
+tar -xzvf lustre-2.15.3-zfs-rpms-i.tar.gz
+yum install ./lustre-2.15.3-zfs-rpms-i/server/*.rpm
 ```
+也可以使用`rpm --reinstall --replacefiles -iUvh ./lustre-2.15.3-zfs-rpms-i/server/*.rpm`命令安装。
 
 ### 加载zfs和lustre内核模块
 ```
@@ -214,8 +216,10 @@ mount -t lustre ostpool-1/ost-1 /lustre/ost/ost-1 -v
 ## 客户端
 ### 安装客户端软件
 ```bash
-yum install lustre-client
+tar -xzvf lustre-2.15.3-zfs-rpms-i.tar.gz
+yum install ./lustre-2.15.3-zfs-rpms-i/client/*.rpm
 ```
+也可以使用`rpm --reinstall --replacefiles -iUvh ./lustre-2.15.3-zfs-rpms-i/client/*.rpm`命令安装。
 
 ### 加载lustre内核模块
 ```bash
