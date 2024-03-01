@@ -38,22 +38,11 @@ getenforce
 ## 服务端
 ### 安装服务端软件
 ```bash
-tar -xzvf lustre-2.15.3-ldiskfs-rpms.tar.gz
-
-cd depends
-rpm --reinstall --replacefiles -iUvh *.rpm
-
-cd kernel
-rpm --reinstall --replacefiles -iUvh kernel-4.18.0-305.3.1.el8.x86_64.rpm kernel-modules-4.18.0-305.3.1.el8.x86_64.rpm kernel-core-4.18.0-305.3.1.el8.x86_64.rpm kernel-devel-4.18.0-305.3.1.el8.x86_64.rpm kernel-headers-4.18.0-305.3.1.el8.x86_64.rpm kernel-modules-internal-4.18.0-305.3.1.el8.x86_64.rpm kernel-modules-extra-4.18.0-305.3.1.el8.x86_64.rpm
-
-reboot
-
-cd e2fsprogs
-rpm --reinstall --replacefiles -iUvh e2fsprogs-1.47.0-wc2.el8.x86_64.rpm e2fsprogs-devel-1.47.0-wc2.el8.x86_64.rpm e2fsprogs-libs-1.47.0-wc2.el8.x86_64.rpm e2fsprogs-static-1.47.0-wc2.el8.x86_64.rpm libcom_err-1.47.0-wc2.el8.x86_64.rpm libcom_err-devel-1.47.0-wc2.el8.x86_64.rpm libss-1.47.0-wc2.el8.x86_64.rpm libss-devel-1.47.0-wc2.el8.x86_64.rpm
-
-cd lustre
-rpm --reinstall --replacefiles -iUvh kmod-lustre-2.15.3-1.el8.x86_64.rpm kmod-lustre-osd-ldiskfs-2.15.3-1.el8.x86_64.rpm lustre-2.15.3-1.el8.x86_64.rpm lustre-devel-2.15.3-1.el8.x86_64.rpm lustre-osd-ldiskfs-mount-2.15.3-1.el8.x86_64.rpm lustre-resource-agents-2.15.3-1.el8.x86_64.rpm
+yum reinstall kernel kernel-modules kernel-core kernel-tools kernel-tools-libs
+yum install e2fsprogs e2fsprogs-libs
+yum install kmod-lustre kmod-lustre-osd-ldiskfs lustre lustre-osd-ldiskfs-mount lustre-iokit lustre-resource-agents
 ```
+也可以使用`rpm --reinstall --replacefiles -iUvh xxxx.rpm`命令离线安装。
 
 ### 加载lustre内核模块
 ```
@@ -131,14 +120,9 @@ mount -t lustre /dev/sdd /lustre/ost/ost-0 -v
 ## 客户端
 ### 安装客户端软件
 ```bash
-tar -xzvf lustre-2.15.3-ldiskfs-rpms.tar.gz
-
-cd depends
-rpm --reinstall --replacefiles -iUvh perl*.rpm
-
-cd lustre/client
-rpm --reinstall --replacefiles -iUvh kmod-lustre-client-2.15.3-1.el8.x86_64.rpm kmod-lustre-client-2.15.3-1.el8.x86_64.rpm
+yum install kmod-lustre-client lustre-client lustre-iokit
 ```
+也可以使用`rpm --reinstall --replacefiles -iUvh xxxx.rpm`命令离线安装。
 
 ### 加载lustre内核模块
 ```bash
