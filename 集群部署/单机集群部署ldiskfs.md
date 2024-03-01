@@ -87,33 +87,36 @@ mkfs.lustre --mgs --backfstype=ldiskfs --reformat /dev/sdb
 
 **启动mgs服务**
 ```bash
-mkdir -p /lustre/mgt/mgt-0
-mount -t lustre /dev/sdb /lustre/mgt/mgt-0 -v
+mkdir -p /lustre/mgt/mgt-0000
+mount -t lustre /dev/disk/by-label/MGS /lustre/mgt/mgt-0000 -v
 ```
+其中`/dev/disk/by-label/MGS`和`/dev/sdb`是等效的，建议采用`/dev/disk/by-label/MGS`，因为磁盘盘符会改变。  
+`/dev/sdb`对应的lable可以通过`blkid`命令查询，也可以通过`ls /dev/disk/by-label`命令查询。  
 原则上挂载点的名字可以任意取名，建议和mgt名字保持一致。
 
 ### 部署MDS服务
 **创建mdt**
 ```bash
-mkfs.lustre --mdt --fsname fs00 --index 0 --mgsnode=192.168.3.11@tcp --backfstype=ldiskfs --reformat /dev/sdc
+mkfs.lustre --mdt --fsname fs00 --index 0x00 --mgsnode=192.168.3.11@tcp --backfstype=ldiskfs --reformat /dev/sdc
 ```
+其中`--index 0x00`采用十六进制方式，也可以采用十进制。建议采用十六进制，因为lustre默认显示方式是十六进制。
 
 **启动mds服务**
 ```bash
-mkdir -p /lustre/mdt/mdt-0
-mount -t lustre /dev/sdc /lustre/mdt/mdt-0 -v
+mkdir -p /lustre/mdt/mdt-0000
+mount -t lustre /dev/disk/by-label/fs00:MDT0000 /lustre/mdt/mdt-0000 -v
 ```
 
 ### 部署OSS服务
 **创建ost**
 ```bash
-mkfs.lustre --ost --fsname fs00 --index 0 --mgsnode=192.168.3.11@tcp --backfstype=ldiskfs --reformat /dev/sdd
+mkfs.lustre --ost --fsname fs00 --index 0x00 --mgsnode=192.168.3.11@tcp --backfstype=ldiskfs --reformat /dev/sdd
 ```
 
 **启动oss服务**
 ```bash
 mkdir -p /lustre/ost/ost-0
-mount -t lustre /dev/sdd /lustre/ost/ost-0 -v
+mount -t lustre /dev/disk/by-label/fs00:OST0000 /lustre/ost/ost-0000 -v
 ```
 
 &nbsp;

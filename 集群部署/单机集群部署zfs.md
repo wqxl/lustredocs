@@ -88,14 +88,14 @@ zpool create -f -O canmount=off -o cachefile=none mgtpool /dev/sdb
 
 **创建mgt**
 ```bash
-mkfs.lustre --mgs --backfstype=zfs --reformat mgtpool/mgt-0
+mkfs.lustre --mgs --backfstype=zfs --reformat mgtpool/mgt-0000
 ```
-`mgtpool/mgt-0`是`mgtpool`的一个逻辑卷，逻辑卷的数量和容量都是可以通过`zfs`命令控制。
+`mgtpool/mgt-0000`是`mgtpool`的一个逻辑卷，逻辑卷的数量和容量都是可以通过`zfs`命令控制。
 
 **启动mgs服务**
 ```bash
-mkdir -p /lustre/mgt/mgt-0
-mount -t lustre mgtpool/mgt-0 /lustre/mgt/mgt-0 -v
+mkdir -p /lustre/mgt/mgt-0000
+mount -t lustre mgtpool/mgt-0000 /lustre/mgt/mgt-0000 -v
 ```
 原则上挂载点的名字可以任意取名，建议和mgt名字保持一致。如果忘记mgt的名字。可以通过`zfs list`命令查找。
 
@@ -108,14 +108,17 @@ zpool create -f -O canmount=off -o cachefile=none mdtpool /dev/sdc
 
 **创建mdt**
 ```bash
-mkfs.lustre --mdt --fsname fs00 --index 0 --mgsnode=192.168.3.11@tcp --backfstype=zfs --reformat mdtpool/mdt-0
+mkfs.lustre --mdt --fsname fs00 --index 0x00 --mgsnode=192.168.3.11@tcp --backfstype=zfs --reformat mdtpool/mdt-0000
 ```
-`mdtpool/mdt-0`是`mdspool`的一个逻辑卷，使用`mount`挂载一个逻辑卷，表示启动一个mds服务。如果想要在同一个节点上启动多个mds，则需要在`mdtpool`中再申请一个逻辑卷，此时`--reformat`参数可以省略，`--index`必须递增。一个mds可以同时管理多个逻辑卷，只需要在`--reformat`参数后同时指定多个逻辑卷。
+`mdtpool/mdt-0000`是`mdspool`的一个逻辑卷，使用`mount`挂载一个逻辑卷，表示启动一个mds服务。  
+如果想要在同一个节点上启动多个mds，则需要在`mdtpool`中再申请一个逻辑卷，此时`--reformat`参数可以省略，`--index`必须递增。  
+一个mds可以同时管理多个逻辑卷，只需要在`--reformat`参数后同时指定多个逻辑卷。  
+`--index 0x00`采用十六进制方式，也可以采用十进制。建议采用十六进制，因为lustre默认显示方式是十六进制。
 
 **启动mds服务**
 ```bash
-mkdir -p /lustre/mdt/mdt-0
-mount -t lustre mdtpool/mdt-0 /lustre/mdt/mdt-0 -v
+mkdir -p /lustre/mdt/mdt-0000
+mount -t lustre mdtpool/mdt-0000 /lustre/mdt/mdt-0000 -v
 ```
 
 ### 部署OSS服务
@@ -126,13 +129,13 @@ zpool create -f -O canmount=off -o cachefile=none ostpool /dev/sdd
 
 **创建ost**
 ```bash
-mkfs.lustre --ost --fsname fs00 --index 0 --mgsnode=192.168.3.11@tcp --backfstype=zfs --reformat ostpool/ost-0
+mkfs.lustre --ost --fsname fs00 --index 0x00 --mgsnode=192.168.3.11@tcp --backfstype=zfs --reformat ostpool/ost-0000
 ```
 
 **启动oss服务**
 ```bash
-mkdir -p /lustre/ost/ost-0
-mount -t lustre ostpool/ost-0 /lustre/ost/ost-0 -v
+mkdir -p /lustre/ost/ost-0000
+mount -t lustre ostpool/ost-0000 /lustre/ost/ost-0000 -v
 ```
 
 &nbsp;
@@ -190,15 +193,15 @@ mount -t lustre 192.168.3.11@tcp:/fs00 /mnt/fs00 -v
 ## 服务端
 ### 关闭所有的服务
 ```bash
-umount mdtpool/mdt-0
-umount ostpool/ost-0
-umount mgtpool/mgt-0
+umount mdtpool/mdt-0000
+umount ostpool/ost-0000
+umount mgtpool/mgt-0000
 ```
 ### 删除所有的逻辑卷
 ```bash
-zfs destroy mgtpool/mgt-0
-zfs destroy mdtpool/mdt-0
-zfs destroy ostpool/ost-0
+zfs destroy mgtpool/mgt-0000
+zfs destroy mdtpool/mdt-0000
+zfs destroy ostpool/ost-0000
 ```
 ### 删除所有的pool
 ```bash

@@ -85,7 +85,7 @@ systemctl enable lnet
 #### Primary Node1
 **创建mgtpool**
 ```bash
-zpool create -f -O canmount=off -o multihost=on -o cachefile=none mgtpool-0 /dev/sdb
+zpool create -f -O canmount=off -o multihost=on -o cachefile=none mgtpool-0000 /dev/sdb
 ```
 容灾模式下使用zpool创建pool时，必须要开启了multihost功能支持。multihost要求为每一个host提供不同的hostid，如果不提供，该命令执行失败。在每一个host上执行`zgenhostid $(hostid)`便可以生成不同的hostid。  
 使用`zpool`创建pool池可以同时绑定多个磁盘，并采用raid0模式来存储数据。如果需要对pool扩容，必须使用`zpool add`添加磁盘到指定的pool中。
@@ -96,120 +96,123 @@ mkfs.lustre --mgs \
 --servicenode=192.168.3.11@tcp \
 --servicenode=192.168.3.12@tcp \
 --backfstype=zfs \
---reformat mgtpool-0/mgt-0
+--reformat mgtpool-0000/mgt-0000
 ```
-`mgtpool-0/mgt-0`是`mgtpool-0`的一个逻辑卷，逻辑卷的数量和容量都是可以通过`zfs`命令控制。  
+`mgtpool-0000/mgt-0000`是`mgtpool-0`的一个逻辑卷，逻辑卷的数量和容量都是可以通过`zfs`命令控制。  
 `servicenode`参数指定当前创建的mgt能够在哪些节点上被使用(容灾)。该参数的数量没有限制。可以将多个`servicenode`参数合并成一个，比如上面的参数可以改写成`--servicenode=192.168.3.11@tcp:192.168.3.12@tcp`。
 
 **启动mgs服务**
 ```bash
-mkdir -p /lustre/mgt/mgt-0
-mount -t lustre mgtpool-0/mgt-0 /lustre/mgt/mgt-0 -v
+mkdir -p /lustre/mgt/mgt-0000
+mount -t lustre mgtpool-0/mgt-0000 /lustre/mgt/mgt-0000 -v
 ```
 
 ### 部署MDS服务
 #### Primary Node1
 **创建mdtpool**
 ```bash
-zpool create -f -O canmount=off -o multihost=on -o cachefile=none mdtpool-0 /dev/sdc
+zpool create -f -O canmount=off -o multihost=on -o cachefile=none mdtpool-0000 /dev/sdc
 ```
 
 **创建mdt**
 ```bash
 mkfs.lustre --mdt \
 --fsname fs00 \
---index 0 \
+--index 0x00 \
 --mgsnode 192.168.3.11@tcp \
 --mgsnode 192.168.3.12@tcp \
 --servicenode 192.168.3.11@tcp \
 --servicenode 192.168.3.12@tcp \
 --backfstype=zfs \
---reformat mdtpool-0/mdt-0
+--reformat mdtpool-0000/mdt-0000
 ```
-如果mgs服务有多个，必须要同时指定多个mgsnode，而且第一个mgsnode必须是primary mgs。另外对于每一个lustre文件系统，mdt index序号必须从0开始，0代表整个文件系统的根目录。  
-`mdtpool-0/mdt-0`是`mdtpool-0`的一个逻辑卷，使用`mount`挂载一个逻辑卷，表示启动一个mds服务。如果想要在同一个节点上启动多个mds，则需要在`mdtpool-0`中再申请一个逻辑卷，此时`--reformat`参数可以省略，`--index`必须递增。一个mds可以同时管理多个逻辑卷，只需要在`--reformat`参数后同时指定多个逻辑卷。
+如果mgs服务有多个，必须要同时指定多个mgsnode，而且第一个mgsnode必须是primary mgs。  
+对于每一个lustre文件系统，mdt index序号必须从0开始，0代表整个文件系统的根目录。  
+`--index 0x00`采用十六进制方式，也可以采用十进制。建议采用十六进制，因为lustre默认显示方式是十六进制。  
+`mdtpool-0000/mdt-0000`是`mdtpool-0`的一个逻辑卷，使用`mount`挂载一个逻辑卷，表示启动一个mds服务。如果想要在同一个节点上启动多个mds，则需要在`mdtpool-0000`中再申请一个逻辑卷，此时`--reformat`参数可以省略，`--index`必须递增。  
+一个mds可以同时管理多个逻辑卷，只需要在`--reformat`参数后同时指定多个逻辑卷。
 
 **启动mds服务**
 ```bash
-mkdir -p /lustre/mdt/mdt-0
-mount -t lustre mdtpool-0/mdt-0 /lustre/mdt/mdt-0 -v
+mkdir -p /lustre/mdt/mdt-0000
+mount -t lustre mdtpool-0000/mdt-0000 /lustre/mdt/mdt-0000 -v
 ```
 
 #### Primary Node2
 **创建mdspool**
 ```bash
-zpool create -f -O canmount=off -o multihost=on -o cachefile=none mdtpool-1 /dev/sdb
+zpool create -f -O canmount=off -o multihost=on -o cachefile=none mdtpool-0001 /dev/sdb
 ```
 
 **创建mdt**
 ```bash
 mkfs.lustre --mdt \
 --fsname fs00 \
---index 1 \
+--index 0x01 \
 --mgsnode 192.168.3.11@tcp \
 --mgsnode 192.168.3.12@tcp \
 --servicenode 192.168.3.12@tcp \
 --servicenode 192.168.3.11@tcp \
 --backfstype=zfs \
---reformat mdtpool-1/mdt-1
+--reformat mdtpool-0001/mdt-0001
 ```
 如果mgs服务有多个，必须要同时指定多个mgsnode，而且第一个mgsnode必须是primary mgs。另外对于每一个lustre文件系统，mdt index序号必须从0开始，0代表整个文件系统的根目录。
 
 **启动mds服务**
 ```bash
-mkdir -p /lustre/mdt/mdt-1
-mount -t lustre mdtpool-1/mdt-1 /lustre/mdt/mdt-1 -v
+mkdir -p /lustre/mdt/mdt-0001
+mount -t lustre mdtpool-0001/mdt-0001 /lustre/mdt/mdt-0001 -v
 ```
 
 ### 部署OSS服务
 #### Primary Node1
 **创建ostpool**
 ```bash
-zpool create -f -O canmount=off -o multihost=on -o cachefile=none ostpool-0 /dev/sdd
+zpool create -f -O canmount=off -o multihost=on -o cachefile=none ostpool-0000 /dev/sdd
 ```
 
 **创建ost**
 ```bash
 mkfs.lustre --ost \
 --fsname fs00 \
---index 0 \
+--index 0x0 \
 --mgsnode 192.168.3.11@tcp \
 --mgsnode 192.168.3.12@tcp \
 --servicenode 192.168.3.11@tcp \
 --servicenode 192.168.3.12@tcp \
 --backfstype=zfs \
---reformat ostpool-0/ost-0
+--reformat ostpool-0000/ost-0000
 ```
 
 **启动oss服务**
 ```bash
-mkdir -p /lustre/ost/ost-0
-mount -t lustre ostpool-0/ost-0 /lustre/ost/ost-0 -v
+mkdir -p /lustre/ost/ost-0000
+mount -t lustre ostpool-0000/ost-0000 /lustre/ost/ost-0000 -v
 ```
 
 #### Primary Node2
 **创建ostpool**
 ```bash
-zpool create -f -O canmount=off -o multihost=on -o cachefile=none ostpool-1 /dev/sdc
+zpool create -f -O canmount=off -o multihost=on -o cachefile=none ostpool-0001 /dev/sdc
 ```
 
 **创建ost**
 ```bash
 mkfs.lustre --ost \
 --fsname fs00 \
---index 1 \
+--index 0x01 \
 --mgsnode 192.168.3.11@tcp \
 --mgsnode 192.168.3.12@tcp \
 --servicenode 192.168.3.12@tcp \
 --servicenode 192.168.3.11@tcp \
 --backfstype=zfs \
---reformat ostpool-1/ost-1
+--reformat ostpool-0001/ost-0001
 ```
 
 **启动oss服务**
 ```bash
-mkdir -p /lustre/ost/ost-1
-mount -t lustre ostpool-1/ost-1 /lustre/ost/ost-1 -v
+mkdir -p /lustre/ost/ost-0001
+mount -t lustre ostpool-0001/ost-0001 /lustre/ost/ost-0001 -v
 ```
 
 &nbsp;

@@ -95,8 +95,8 @@ mkfs.lustre --mgs \
 
 **启动mgs服务**
 ```bash
-mkdir -p /lustre/mgt/mgt-0
-mount -t lustre /dev/sdb /lustre/mgt/mgt-0 -v
+mkdir -p /lustre/mgt/mgt-0000
+mount -t lustre /dev/sdb /lustre/mgt/mgt-0000 -v
 ```
 
 ### 部署MDS服务
@@ -105,7 +105,7 @@ mount -t lustre /dev/sdb /lustre/mgt/mgt-0 -v
 ```bash
 mkfs.lustre --mdt \
 --fsname fs00 \
---index 0 \
+--index 0x00 \
 --mgsnode 192.168.3.11@tcp \
 --mgsnode 192.168.3.12@tcp \
 --servicenode 192.168.3.11@tcp \
@@ -117,8 +117,8 @@ mkfs.lustre --mdt \
 
 **启动mds服务**
 ```bash
-mkdir -p /lustre/mdt/mdt-0
-mount -t lustre /dev/sdc /lustre/mdt/mdt-0 -v
+mkdir -p /lustre/mdt/mdt-0000
+mount -t lustre /dev/sdc /lustre/mdt/mdt-0000 -v
 ```
 
 #### Primary Node2
@@ -126,7 +126,7 @@ mount -t lustre /dev/sdc /lustre/mdt/mdt-0 -v
 ```bash
 mkfs.lustre --mdt \
 --fsname fs00 \
---index 1 \
+--index 0x01 \
 --mgsnode 192.168.3.11@tcp \
 --mgsnode 192.168.3.12@tcp \
 --servicenode 192.168.3.12@tcp \
@@ -138,8 +138,8 @@ mkfs.lustre --mdt \
 
 **启动mds服务**
 ```bash
-mkdir -p /lustre/mdt/mdt-1
-mount -t lustre /dev/sdd /lustre/mdt/mdt-1 -v
+mkdir -p /lustre/mdt/mdt-0001
+mount -t lustre /dev/sdd /lustre/mdt/mdt-0001 -v
 ```
 
 ### 部署OSS服务
@@ -148,7 +148,7 @@ mount -t lustre /dev/sdd /lustre/mdt/mdt-1 -v
 ```bash
 mkfs.lustre --ost \
 --fsname fs00 \
---index 0 \
+--index 0x00 \
 --mgsnode 192.168.3.11@tcp \
 --mgsnode 192.168.3.12@tcp \
 --servicenode 192.168.3.11@tcp \
@@ -159,8 +159,8 @@ mkfs.lustre --ost \
 
 **启动oss服务**
 ```bash
-mkdir -p /lustre/ost/ost-0
-mount -t lustre /dev/sde /lustre/ost/ost-0 -v
+mkdir -p /lustre/ost/ost-0000
+mount -t lustre /dev/sde /lustre/ost/ost-0000 -v
 ```
 
 #### Primary Node2
@@ -168,7 +168,7 @@ mount -t lustre /dev/sde /lustre/ost/ost-0 -v
 ```bash
 mkfs.lustre --ost \
 --fsname fs00 \
---index 1 \
+--index 0x01 \
 --mgsnode 192.168.3.11@tcp \
 --mgsnode 192.168.3.12@tcp \
 --servicenode 192.168.3.12@tcp \
@@ -179,8 +179,8 @@ mkfs.lustre --ost \
 
 **启动oss服务**
 ```bash
-mkdir -p /lustre/ost/ost-1
-mount -t lustre /dev/sdf /lustre/ost/ost-1 -v
+mkdir -p /lustre/ost/ost-0001
+mount -t lustre /dev/sdf /lustre/ost/ost-0001 -v
 ```
 
 &nbsp;
