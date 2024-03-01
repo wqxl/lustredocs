@@ -96,7 +96,7 @@ mkfs.lustre --mgs \
 **启动mgs服务**
 ```bash
 mkdir -p /lustre/mgt/mgt-0000
-mount -t lustre /dev/sdb /lustre/mgt/mgt-0000 -v
+mount -t lustre /dev/disk/by-label/MGS /lustre/mgt/mgt-0000 -v
 ```
 
 ### 部署MDS服务
@@ -118,7 +118,7 @@ mkfs.lustre --mdt \
 **启动mds服务**
 ```bash
 mkdir -p /lustre/mdt/mdt-0000
-mount -t lustre /dev/sdc /lustre/mdt/mdt-0000 -v
+mount -t lustre /dev/disk/by-label/fs00-MDT0000 /lustre/mdt/mdt-0000 -v
 ```
 
 #### Primary Node2
@@ -139,7 +139,7 @@ mkfs.lustre --mdt \
 **启动mds服务**
 ```bash
 mkdir -p /lustre/mdt/mdt-0001
-mount -t lustre /dev/sdd /lustre/mdt/mdt-0001 -v
+mount -t lustre /dev/disk/by-label/fs00-MDT0001 /lustre/mdt/mdt-0001 -v
 ```
 
 ### 部署OSS服务
@@ -160,7 +160,7 @@ mkfs.lustre --ost \
 **启动oss服务**
 ```bash
 mkdir -p /lustre/ost/ost-0000
-mount -t lustre /dev/sde /lustre/ost/ost-0000 -v
+mount -t lustre /dev/disk/by-label/fs00-OST0000 /lustre/ost/ost-0000 -v
 ```
 
 #### Primary Node2
@@ -180,7 +180,7 @@ mkfs.lustre --ost \
 **启动oss服务**
 ```bash
 mkdir -p /lustre/ost/ost-0001
-mount -t lustre /dev/sdf /lustre/ost/ost-0001 -v
+mount -t lustre /dev/disk/by-label/fs00-OST0001 /lustre/ost/ost-0001 -v
 ```
 
 &nbsp;

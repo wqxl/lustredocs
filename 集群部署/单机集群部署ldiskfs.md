@@ -104,7 +104,7 @@ mkfs.lustre --mdt --fsname fs00 --index 0x00 --mgsnode=192.168.3.11@tcp --backfs
 **启动mds服务**
 ```bash
 mkdir -p /lustre/mdt/mdt-0000
-mount -t lustre /dev/disk/by-label/fs00:MDT0000 /lustre/mdt/mdt-0000 -v
+mount -t lustre /dev/disk/by-label/fs00-MDT0000 /lustre/mdt/mdt-0000 -v
 ```
 
 ### 部署OSS服务
@@ -116,7 +116,7 @@ mkfs.lustre --ost --fsname fs00 --index 0x00 --mgsnode=192.168.3.11@tcp --backfs
 **启动oss服务**
 ```bash
 mkdir -p /lustre/ost/ost-0
-mount -t lustre /dev/disk/by-label/fs00:OST0000 /lustre/ost/ost-0000 -v
+mount -t lustre /dev/disk/by-label/fs00-OST0000 /lustre/ost/ost-0000 -v
 ```
 
 &nbsp;
