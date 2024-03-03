@@ -35,6 +35,16 @@ getenforce
 &nbsp;
 &nbsp;
 # 集群部署
+## 集群规划
+```bash
+mgt-0000     192.168.3.11     node1
+mdt-0000     192.168.3.11     node1
+mdt-0001     192.168.3.12     node2
+ost-0000     192.168.3.13     node3
+ost-0001     192.168.3.14     node4
+```
+node1与node2互为主备，node3与node4互为主备。
+
 ## 服务端
 ### 安装服务端软件
 ```bash
@@ -82,7 +92,7 @@ systemctl enable lnet
 
 &nbsp;
 ### 部署MGS服务
-#### Primary Node1
+#### 节点node1
 **创建mgt**
 ```bash
 mkfs.lustre --mgs \
@@ -100,7 +110,7 @@ mount -t lustre /dev/disk/by-label/MGS /lustre/mgt/mgt-0000 -v
 ```
 
 ### 部署MDS服务
-#### Primary Node1
+#### 节点node1
 **创建mdt**
 ```bash
 mkfs.lustre --mdt \
@@ -121,7 +131,7 @@ mkdir -p /lustre/mdt/mdt-0000
 mount -t lustre /dev/disk/by-label/fs00-MDT0000 /lustre/mdt/mdt-0000 -v
 ```
 
-#### Primary Node2
+#### 节点node2
 **创建mdt**
 ```bash
 mkfs.lustre --mdt \
@@ -143,7 +153,7 @@ mount -t lustre /dev/disk/by-label/fs00-MDT0001 /lustre/mdt/mdt-0001 -v
 ```
 
 ### 部署OSS服务
-#### Primary Node1
+#### 节点node3
 **创建ost**
 ```bash
 mkfs.lustre --ost \
@@ -151,8 +161,8 @@ mkfs.lustre --ost \
 --index 0x00 \
 --mgsnode 192.168.3.11@tcp \
 --mgsnode 192.168.3.12@tcp \
---servicenode 192.168.3.11@tcp \
---servicenode 192.168.3.12@tcp \
+--servicenode 192.168.3.13@tcp \
+--servicenode 192.168.3.14@tcp \
 --backfstype=ldiskfs \
 --reformat /dev/sde
 ```
@@ -163,7 +173,7 @@ mkdir -p /lustre/ost/ost-0000
 mount -t lustre /dev/disk/by-label/fs00-OST0000 /lustre/ost/ost-0000 -v
 ```
 
-#### Primary Node2
+#### 节点node4
 **创建ost**
 ```bash
 mkfs.lustre --ost \
@@ -171,8 +181,8 @@ mkfs.lustre --ost \
 --index 0x01 \
 --mgsnode 192.168.3.11@tcp \
 --mgsnode 192.168.3.12@tcp \
---servicenode 192.168.3.12@tcp \
---servicenode 192.168.3.11@tcp \
+--servicenode 192.168.3.14@tcp \
+--servicenode 192.168.3.13@tcp \
 --backfstype=ldiskfs \
 --reformat /dev/sdf
 ```

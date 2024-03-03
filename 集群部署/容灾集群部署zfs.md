@@ -35,6 +35,16 @@ getenforce
 &nbsp;
 &nbsp;
 # 集群部署
+## 集群规划
+```bash
+mgt-0000     192.168.3.11     node1
+mdt-0000     192.168.3.11     node1
+mdt-0001     192.168.3.12     node2
+ost-0000     192.168.3.13     node3
+ost-0001     192.168.3.14     node4
+```
+node1与node2互为主备，node3与node4互为主备。
+
 ## 服务端
 ### 安装服务端软件
 ```bash
@@ -82,7 +92,7 @@ systemctl enable lnet
 
 &nbsp;
 ### 部署MGS服务
-#### Primary Node1
+#### 节点node1
 **创建mgtpool**
 ```bash
 zpool create -f -O canmount=off -o multihost=on -o cachefile=none mgtpool-0000 /dev/sdb
@@ -108,7 +118,7 @@ mount -t lustre mgtpool-0/mgt-0000 /lustre/mgt/mgt-0000 -v
 ```
 
 ### 部署MDS服务
-#### Primary Node1
+#### 节点node1
 **创建mdtpool**
 ```bash
 zpool create -f -O canmount=off -o multihost=on -o cachefile=none mdtpool-0000 /dev/sdc
@@ -138,7 +148,7 @@ mkdir -p /lustre/mdt/mdt-0000
 mount -t lustre mdtpool-0000/mdt-0000 /lustre/mdt/mdt-0000 -v
 ```
 
-#### Primary Node2
+#### 节点node2
 **创建mdspool**
 ```bash
 zpool create -f -O canmount=off -o multihost=on -o cachefile=none mdtpool-0001 /dev/sdb
@@ -165,7 +175,7 @@ mount -t lustre mdtpool-0001/mdt-0001 /lustre/mdt/mdt-0001 -v
 ```
 
 ### 部署OSS服务
-#### Primary Node1
+#### 节点node3
 **创建ostpool**
 ```bash
 zpool create -f -O canmount=off -o multihost=on -o cachefile=none ostpool-0000 /dev/sdd
@@ -178,8 +188,8 @@ mkfs.lustre --ost \
 --index 0x0 \
 --mgsnode 192.168.3.11@tcp \
 --mgsnode 192.168.3.12@tcp \
---servicenode 192.168.3.11@tcp \
---servicenode 192.168.3.12@tcp \
+--servicenode 192.168.3.13@tcp \
+--servicenode 192.168.3.14@tcp \
 --backfstype=zfs \
 --reformat ostpool-0000/ost-0000
 ```
@@ -190,7 +200,7 @@ mkdir -p /lustre/ost/ost-0000
 mount -t lustre ostpool-0000/ost-0000 /lustre/ost/ost-0000 -v
 ```
 
-#### Primary Node2
+#### 节点node4
 **创建ostpool**
 ```bash
 zpool create -f -O canmount=off -o multihost=on -o cachefile=none ostpool-0001 /dev/sdc
@@ -203,8 +213,8 @@ mkfs.lustre --ost \
 --index 0x01 \
 --mgsnode 192.168.3.11@tcp \
 --mgsnode 192.168.3.12@tcp \
---servicenode 192.168.3.12@tcp \
---servicenode 192.168.3.11@tcp \
+--servicenode 192.168.3.14@tcp \
+--servicenode 192.168.3.13@tcp \
 --backfstype=zfs \
 --reformat ostpool-0001/ost-0001
 ```
