@@ -30,19 +30,12 @@ yum install kernel-headers-4.18.0-305.3.1.el8.x86_64 kernel-devel-4.18.0-305.3.1
 
 ### 安装其他编译依赖
 ```bash
-yum install -y bison device-mapper-devel elfutils-devel elfutils-libelf-devel expect \
-               flex gcc gcc-c++ git glib2 glib2-devel hmaccalc keyutils-libs-devel \
-               krb5-devel ksh libattr-devel libblkid-devel libselinux-devel libtool \
-               libuuid-devel libyaml-devel lsscsi make ncurses-devel net-snmp-devel \
-               net-tools newt-devel numactl-devel parted patchutils pciutils-devel \
-               perl-ExtUtils-Embed pesign redhat-rpm-config rpm-build systemd-devel \
-               tcl tcl-devel tk tk-devel wget xmlto yum-utils zlib-devel libmount-devel \
-               libnl3-devel python3-devel
+yum install asciidoc audit binutils clang dwarves java-devel kabi-dw libbabeltrace-devel libbpf-devel libcap-devel libcap-ng-devel libmnl-devel llvm perl-generators python3-docutils bison device-mapper-devel elfutils-devel elfutils-libelf-devel expect flex gcc gcc-c++ git glib2 glib2-devel hmaccalc keyutils-libs-devel krb5-devel ksh libattr-devel libblkid-devel libselinux-devel libtool libuuid-devel libyaml-devel lsscsi make ncurses-devel net-snmp-devel net-tools newt-devel numactl-devel parted patchutils pciutils-devel perl-ExtUtils-Embed pesign redhat-rpm-config rpm-build systemd-devel tcl tcl-devel tk tk-devel wget xmlto yum-utils zlib-devel libmount-devel libnl3-devel python3-devel
 ```
 
 ### 安装e2fsprogs相关依赖
 ```bash
-yum install -y e2fsprogs-1.47.0-wc2 e2fsprogs-devel-1.47.0-wc2 e2fsprogs-libs-1.47.0-wc2 e2fsprogs-static-1.47.0-wc2 libcom_err-1.47.0-wc2 libcom_err-devel-1.47.0-wc2 libss-1.47.0-wc2 libss-devel-1.47.0-wc2
+yum install e2fsprogs-1.47.0-wc2.el8 e2fsprogs-devel-1.47.0-wc2.el8  e2fsprogs-libs-1.47.0-wc2.el8 e2fsprogs-static-1.47.0-wc2.el8  libcom_err-1.47.0-wc2.el8 libcom_err-devel-1.47.0-wc2.el8 libss-1.47.0-wc2.el8 libss-devel-1.47.0-wc2.el8
 ```
 e2fsprogs必须要从[https://downloads.whamcloud.com/public/e2fsprogs/1.47.0.wc2/el8/RPMS/x86_64/]()下载，e2fsprogs也是lustre高度定制的。
 
@@ -104,7 +97,7 @@ ApplyOptionalPatch patch-%{version}-lustre.patch
 cd /root/lustre-2.15.3/lustre/kernel_patches/series
 for patch in $(<"4.18-rhel8.series"); do \
     patch_file="/root/lustre-2.15.3/lustre/kernel_patches/patches/${patch}"; \
-    cat "${patch_file}" >> "/root/kernel/rpmbuild/SOURCES/lustre-kernel-x86_64-lustre.patch"; \
+    cat "${patch_file}" >> "/root/kernel/rpmbuild/SOURCES/patch-4.18.0-lustre.patch"; \
 done
 ```
 
@@ -114,6 +107,7 @@ done
 ```bash
 rpmbuild -bb --with firmware --target x86_64 kernel.spec
 ```
+如果需要修改kernel rpm包名字，比如在kernel-4.18.0-305.3.1.el8修改成kernel-4.18.0-305.3.1.el8_lustre，需要执行`buildid="_lustre" && rpmbuild -bb --with firmware --target x86_64 --define "buildid ${buildid}" kernel.spec`。
 
 ### 安装内核并重启
 ```bash
@@ -130,6 +124,7 @@ reboot
 ```bash
 ./configure --enable-server --disable-zfs
 ```
+如果需要支持IB网络，需要添加`--with-o2ib=/usr/src/ofa_kernel/default`
 
 ### 编译
 ```bash
